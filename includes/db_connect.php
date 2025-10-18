@@ -1,5 +1,6 @@
 <?php
 
+//* This is for local development. The live server details are found on my personal sever provided by the school
 $db_host = 'localhost';
 $db_user = 'root';
 $db_pass = '';

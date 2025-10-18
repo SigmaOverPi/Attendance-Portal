@@ -23,7 +23,7 @@ $user = $user_result->fetch_assoc();
 $student_name = $user['full_name'];
 
 //* Prepare SQL to fetch attendance records for this student
-//* We use joins to get data from multiple tables at once
+//* Using joins to get data from multiple tables at once
 $sql = 'SELECT
             c.course_name,
             s.session_date,

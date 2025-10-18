@@ -10,19 +10,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $email = trim($_POST['mail-field']);
     $password = $_POST['pass-field'];
 
-    //* DATABASE LOGIC GOES HERE
-    //* For now, let's pretend the login fails to show the error message
-    //* In the real version, database will be queried, user will be checked,
-    //* and password_verify() would be used
-
     $stmt = $conn->prepare('SELECT user_id, password FROM users WHERE email = ?');
     $stmt->bind_param('s', $email);
     $stmt->execute();
     $result = $stmt->get_result();
-
-    // //* debugging
-    // var_dump($result->fetch_assoc());
-    // die();
     
     if ($result->num_rows === 1){
         $user = $result->fetch_assoc();
