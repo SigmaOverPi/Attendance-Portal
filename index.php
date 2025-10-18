@@ -3,7 +3,6 @@
 session_start();
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-    // TODO: Include database connection file here
     require 'includes/db_connect.php';
 
     //* Get data from form using 'name' attributes
