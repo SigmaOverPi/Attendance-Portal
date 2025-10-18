@@ -131,34 +131,6 @@ $result = $stmt->get_result();
                     </tbody>
 
                 </table>
-
-                <div class="right-side" id="right-dash">
-                    <div class="right-side-box">
-                        <div class="top-side">
-                            <p style="display: flex; align-items: center;">Sessions</p>
-                            <select name="sessions" id="sessions-selector">
-                                <option value="monday">Monday</option>
-                            </select>
-                        </div>
-
-                        <div class="bottom-side">
-
-                        </div>
-                    </div>
-
-                    <div class="right-side-box">
-                        <div class="top-side">
-                            <p style="display: flex; align-items: center;">Reports</p>
-                            <select name="reports" id="reports-selector">
-                                <option value="monday">Last 7 Days</option>
-                            </select>
-                        </div>
-
-                        <div class="bottom-side">
-
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
