@@ -1,3 +1,35 @@
+<?php
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+    $fullName = $_POST['name'];
+    $email = $_POST['mail-field'];
+    $password = $_POST['pass-field'];
+    $role = $_POST['role'];
+
+    if(empty($fullName) || empty($email) || empty($password) || empty($role)){
+        $error_message = "All fields are required. Please fill out the entire form.";
+    } else{
+        require 'includes/db_connect.php';
+
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        $stmt = $conn->prepare("INSERT INTO users (full_name, email, password, role) VALUES (?, ?, ?, ?)");
+
+        $stmt->bind_param("ssss", $fullName, $email, $hashedPassword, $role);
+
+        if($stmt->execute()){
+            header("Location: index.php?signup=success");
+            exit();
+        } else{
+            $error_message = "Error: Could not create account. The email might already be in use.";
+        }
+
+        $stmt->close();
+        $conn->close();
+    }   
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,14 +45,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="styles.css">
-    <title>Index</title>
+    <title>Sign Up</title>
 </head>
 <body>
     <script src="script.js" defer async></script>
 
     <div class="login-container">
         <div class="left-side">
-            <a href="index.html"><img src="resources/ashesilogo.JPG" alt="ashesi-logo"></a>
+            <a href="index.php"><img src="resources/ashesilogo.JPG" alt="ashesi-logo"></a>
             <h1 style="margin: 0;">ATTENDANCE MADE EASY</h1>
             <p style="margin: 0;">A simple and reliable system to track, record, and manage attendance efficiently</p>
         </div>
@@ -29,10 +61,17 @@
             <h2>WELCOME!</h2>
             <p>Create an account</p>
 
-            <form name="signup-form" action="dashboard.html" onsubmit="return validatePassword()">
+            <?php
+            //* Display an error mesage if one exists
+            if(isset($error_message)){
+                echo '<p class="error">' . htmlspecialchars($error_message) . '</p>';
+            }
+            ?>
+
+            <form name="signup-form" action="signup.php" method="POST" onsubmit="return validatePassword()">
                 <label for="name-field">
                     <p>Name</p>
-                    <input type="text" name="name" id="name-field" placeholder="Enter your name">
+                    <input type="text" name="name" id="name-field" placeholder="Enter your name" required>
                 </label>
 
                 <label for="email-field">
@@ -57,10 +96,10 @@
                 </label>
 
                 <label for="submit-btn">
-                    <input type="submit" value="Login" id="submit-btn">
+                    <input type="submit" value="Sign Up" id="submit-btn">
                 </label>
 
-                <p>Already have an account? <a href="index.html">Login</a></p>
+                <p>Already have an account? <a href="index.php">Login</a></p>
             </form>
         </div>
     </div>

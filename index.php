@@ -1,3 +1,48 @@
+<?php
+//* Start session to store user info
+session_start();
+
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+    // TODO: Include database connection file here
+    require 'includes/db_connect.php';
+
+    //* Get data from form using 'name' attributes
+
+    $email = trim($_POST['mail-field']);
+    $password = $_POST['pass-field'];
+
+    //* DATABASE LOGIC GOES HERE
+    //* For now, let's pretend the login fails to show the error message
+    //* In the real version, database will be queried, user will be checked,
+    //* and password_verify() would be used
+
+    $stmt = $conn->prepare('SELECT user_id, password FROM users WHERE email = ?');
+    $stmt->bind_param('s', $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // //* debugging
+    // var_dump($result->fetch_assoc());
+    // die();
+    
+    if ($result->num_rows === 1){
+        $user = $result->fetch_assoc();
+
+        if (password_verify($password, $user['password'])){
+            $_SESSION['user_id'] = $user['user_id'];
+            header("Location: dashboard.php");
+            exit();
+        } else{
+            $error_message = "The email or password you entered is incorrect.";
+        }
+    } else{
+        $error_message = "The email or password you entered is incorrect";
+    }
+
+    $stmt->close();
+    $conn->close();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,14 +58,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="styles.css">
-    <title>Index</title>
+    <title>Login</title>
 </head>
 <body>
     <script src="script.js" defer async></script>
 
     <div class="login-container">
         <div class="left-side" >
-            <a href="index.html"><img src="resources/ashesilogo.JPG" alt="ashesi-logo"></a>
+            <a href="index.php"><img src="resources/ashesilogo.JPG" alt="ashesi-logo"></a>
             <h1 style="margin: 0;">ATTENDANCE MADE EASY</h1>
             <p style="margin: 0;">A simple and reliable system to track, record, and manage attendance efficiently</p>
         </div>
@@ -30,7 +75,13 @@
             <h2>WELCOME BACK!</h2>
             <p>Log into your account</p>
 
-            <form name="signup-form" action="dashboard.html" onsubmit="return validatePassword()">
+            <?php
+            if(isset($error_message)){
+                echo '<p class="error">' . htmlspecialchars($error_message) . '</p>';
+            }
+            ?>
+
+            <form name="signup-form" action="index.php" method="POST">
                 <label for="email-field">
                     <p>Email</p>
                     <input type="email" name="mail-field" id="email-field" placeholder="Enter your email" aria-required="true" required>
@@ -47,7 +98,7 @@
                     <input type="submit" value="Login" id="submit-btn">
                 </label>
 
-                <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+                <p>Don't have an account? <a href="signup.php">Sign up</a></p>
             </form>
         </div>
     </div>
