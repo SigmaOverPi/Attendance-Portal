@@ -15,6 +15,6 @@ This repository contains the code and documents for Activity 3.1 of the Web Tech
 - JavaScript
 
 ## Setup Instructions:
-- Create activity folder in XAMPP's htdocs folder(in this case, the folder was named activity_03)
+- Create activity folder in XAMPP's htdocs folder(in this case, the folder is named activity_03)
 - Import database
-- Navigate to 'localhost/activity_03'
+- Navigate to 'localhost/activity_03/'
