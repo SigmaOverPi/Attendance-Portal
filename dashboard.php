@@ -129,7 +129,6 @@ $result = $stmt->get_result();
                             </tr>
                         <?php endif; ?>
                     </tbody>
-
                 </table>
             </div>
         </div>
